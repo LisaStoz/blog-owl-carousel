@@ -67,15 +67,19 @@
 
   <script>
   $(document).ready(function() {
-    var $carouselContainer = $("#carousel-content-container");
+    var $carouselContainer = $("#carousel-content-container"),
+        totalItems = $carouselContainer.find('.slide').length,
+        currentItem = 0, slideSize = 3;
 
     $carouselContainer.owlCarousel({
-      items: 3,
+      items: slideSize,
       scrollPerPage: true,
-      afterAction: function(){
+      afterInit: function(){
 
         // owl carousel's afterAction callback is fired after initialisation
         // and each user interaction with the carousel
+
+        var owl = this.owl;
 
         $carouselContainer.on("keydown", function(e){
 
@@ -106,10 +110,14 @@
 
           } else if (code === 39) {
             // arrow right - next slide
-            $carouselContainer.trigger('owl.next');
+            // currentItem = (currentItem + slideSize) % totalItems;
+            // console.log('next', currentItem);
+            $carouselContainer.data('owlCarousel').next();
           } else if (code === 37) {
             // arrow left - previous slide
-            $carouselContainer.trigger('owl.prev');
+            // currentItem = (totalItems + (currentItem - slideSize)) % totalItems;
+            // console.log('prev' ,currentItem);
+            $carouselContainer.data('owlCarousel').prev();
           }
 
         });
