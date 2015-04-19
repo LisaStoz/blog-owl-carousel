@@ -76,16 +76,14 @@
       scrollPerPage: true,
       afterInit: function(){
 
-        // owl carousel's afterAction callback is fired after initialisation
-        // and each user interaction with the carousel
-
-        var owl = this.owl;
+        // owl carousel's afterInit callback is fired only once after initialisation
 
         $carouselContainer.on("keydown", function(e){
 
           // first of all make sure we override the default keyboard behaviour
           // only for the wrapper and not everything inside it
           if ( $(e.target).is("#carousel-content-container")  ) {
+
             // get the code of key pressed
             var code = e.keyCode || e.which;
 
@@ -118,6 +116,28 @@
               // arrow left - previous slide
               $carouselContainer.data('owlCarousel').prev();
             }
+
+          }
+
+        });
+      },
+      afterAction: function(){
+
+        // owl carousel's afterAction callback is fired after every user interaction
+        // and also after initialisation
+
+        var owl = this.owl;
+
+        $carouselContainer.on("keydown", function(e){
+
+          var code = e.keyCode || e.which;
+
+          if (code === 13) { // enter key detected
+
+            // enter - focus on first tabbable element in the visible slide
+            setTimeout(function(){
+              $carouselContainer.find('.owl-item').eq(owl.currentItem).find(':tabbable').focus();
+            });
 
           }
 
