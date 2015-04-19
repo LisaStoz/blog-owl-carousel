@@ -1,7 +1,3 @@
-...
-<div id="carousel-content-container" tabindex="0">...</div>
-...
-<script>
 $(document).ready(function() {
   var $carouselContainer = $("#carousel-content-container");
 
@@ -45,5 +41,3 @@ $(document).ready(function() {
     }
   });
 });
-</script>
-...
