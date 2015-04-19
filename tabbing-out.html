@@ -67,12 +67,10 @@
 
   <script>
   $(document).ready(function() {
-    var $carouselContainer = $("#carousel-content-container"),
-        totalItems = $carouselContainer.find('.slide').length,
-        currentItem = 0, slideSize = 3;
+    var $carouselContainer = $("#carousel-content-container");
 
     $carouselContainer.owlCarousel({
-      items: slideSize,
+      items: 3,
       scrollPerPage: true,
       afterInit: function(){
 
@@ -149,7 +147,7 @@
           .find('.owl-item').find(':tabbable').off('keydown');
 
         // add most up-to-date tab handler
-        var lastVisible = this.owl.visibleItems[this.owl.visibleItems.length-1];
+        var lastVisible = owl.visibleItems[owl.visibleItems.length-1];
         $carouselContainer
           .find('.owl-item')
           .eq(lastVisible)

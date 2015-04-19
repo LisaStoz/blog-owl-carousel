@@ -67,19 +67,15 @@
 
   <script>
   $(document).ready(function() {
-    var $carouselContainer = $("#carousel-content-container"),
-        totalItems = $carouselContainer.find('.slide').length,
-        currentItem = 0, slideSize = 3;
+    var $carouselContainer = $("#carousel-content-container");
 
     $carouselContainer.owlCarousel({
-      items: slideSize,
+      items: 3,
       scrollPerPage: true,
       afterInit: function(){
 
         // owl carousel's afterAction callback is fired after initialisation
         // and each user interaction with the carousel
-
-        var owl = this.owl;
 
         $carouselContainer.on("keydown", function(e){
 
