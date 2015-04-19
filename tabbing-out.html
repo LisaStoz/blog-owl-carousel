@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Owl Carousel Accessibility Enhancemnents</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.carousel.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.theme.min.css">
+  <style>
+  .page-wrapper {
+    width: 600px;
+    margin: 40px auto;
+  }
+  </style>
+
+</head>
+<body>
+
+  <div class="page-wrapper">
+
+    <h2>Example owl carousel slideshow</h2>
+
+    <p>Hey, I am <a href="#">tababble element</a> before the carousel.</p>
+
+    <div id="carousel-content-container" tabindex="0">
+      <div class="slide">
+        <h2><a href="">Title1</a></h2>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur varius metus eu rhoncus imperdiet. Cras nec mauris mauris. In hac habitasse platea dictumst.</p>
+      </div>
+      <div class="slide">
+        <h2><a href="">Title2</a></h2>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur varius metus eu rhoncus imperdiet. Cras nec mauris mauris. In hac habitasse platea dictumst.</p>
+      </div>
+      <div class="slide">
+        <h2><a href="">Title3</a></h2>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur varius metus eu rhoncus imperdiet. Cras nec mauris mauris. In hac habitasse platea dictumst.</p>
+      </div>
+      <div class="slide">
+        <h2><a href="">Title4</a></h2>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur varius metus eu rhoncus imperdiet. Cras nec mauris mauris. In hac habitasse platea dictumst.</p>
+      </div>
+      <div class="slide">
+        <h2><a href="">Title5</a></h2>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur varius metus eu rhoncus imperdiet. Cras nec mauris mauris. In hac habitasse platea dictumst.</p>
+      </div>
+      <div class="slide">
+        <h2><a href="">Title6</a></h2>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur varius metus eu rhoncus imperdiet. Cras nec mauris mauris. In hac habitasse platea dictumst.</p>
+      </div>
+      <div class="slide">
+        <h2><a href="">Title7</a></h2>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur varius metus eu rhoncus imperdiet. Cras nec mauris mauris. In hac habitasse platea dictumst.</p>
+      </div>
+    </div>
+
+    <p>Hey, I am a <a href="#">tabbable element</a> after carousel.</p>
+
+  </div>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.carousel.min.js"></script>
+
+
+  <script>
+  $(document).ready(function() {
+    var $carouselContainer = $("#carousel-content-container"),
+        totalItems = $carouselContainer.find('.slide').length,
+        currentItem = 0, slideSize = 3;
+
+    $carouselContainer.owlCarousel({
+      items: slideSize,
+      scrollPerPage: true,
+      afterInit: function(){
+
+        // owl carousel's afterInit callback is fired only once after initialisation
+
+        $carouselContainer.on("keydown", function(e){
+
+          // first of all make sure we override the default keyboard behaviour
+          // only for the wrapper and not everything inside it
+          if ( $(e.target).is("#carousel-content-container")  ) {
+
+            // get the code of key pressed
+            var code = e.keyCode || e.which;
+
+            if (code === 9) { // tab key detected
+
+              // get all tabbable elements excluding all carousel's contents
+              var $tabbable = $(":tabbable").not("#carousel-content-container *");
+
+              // the index of the carousel among all tabbable elements on the page
+              var carouselAmongTabbable = $tabbable.index($(this));
+
+              // increment, to get the index of the next tabbable
+              var nextTabbableIndex = carouselAmongTabbable+1;
+
+              // access the next tabbable element by its index
+              var $nextTabbable = $tabbable.eq(nextTabbableIndex);
+
+              // force focus to the next tabbable element
+
+              // simply $nextTabbable.focus(); doesn't work
+              // wrapping into setTimeout does the trick
+              setTimeout(function(){
+                $nextTabbable.focus();
+              });
+
+            } else if (code === 39) {
+              // arrow right - next slide
+              $carouselContainer.data('owlCarousel').next();
+            } else if (code === 37) {
+              // arrow left - previous slide
+              $carouselContainer.data('owlCarousel').prev();
+            }
+
+          }
+
+        });
+      },
+      afterAction: function(){
+
+        // owl carousel's afterAction callback is fired after every user interaction
+        // and also after initialisation
+
+        var owl = this.owl;
+
+        $carouselContainer.on("keydown", function(e){
+
+          var code = e.keyCode || e.which;
+
+          if (code === 13) { // enter key detected
+
+            // enter - focus on first tabbable element in the visible slide
+            setTimeout(function(){
+              $carouselContainer.find('.owl-item').eq(owl.currentItem).find(':tabbable').focus();
+            });
+
+          }
+
+        });
+
+
+        // remove previous tab key handlers
+        $carouselContainer
+          .find('.owl-item').find(':tabbable').off('keydown');
+
+        // add most up-to-date tab handler
+        var lastVisible = this.owl.visibleItems[this.owl.visibleItems.length-1];
+        $carouselContainer
+          .find('.owl-item')
+          .eq(lastVisible)
+          .find(':tabbable').last().on('keydown', function(e){
+            var code = e.keyCode || e.which;
+            if (code === 9) {
+              e.preventDefault();
+              setTimeout(function(){
+                $carouselContainer.focus();
+              });
+            }
+          });
+
+      }
+    });
+  });
+  </script>
+
+</body>
+</html>
